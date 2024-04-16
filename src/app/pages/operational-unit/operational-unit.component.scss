@@ -1,0 +1,120 @@
+
+
+.custom-div {
+    width: 130px;
+    height: 50px;
+    border-radius: 10px;
+  }
+  
+  .custom-div .font-bold {
+    font-size: 14px;
+  }
+  
+  .bold-title {
+    font-weight: bold;
+    font-size: 12px;
+  
+  }
+  
+  .custom-div .data-container {
+    font-size: 14px;
+  }
+  
+  .flex {
+    display: flex;
+    align-items: center;
+  }
+  
+  .custom-image {
+    width: 50px;
+    height: auto;
+    margin-right: 6px;
+  }
+  
+  .data-container {
+    flex-grow: 1;
+  }
+  
+  :host ::ng-deep .myClass {
+    border-color: #9AC8CD;
+    border-radius: 20px 0 20px 0;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(58, 54, 58, 0.2);
+  }
+  .overlay {
+    position: absolute;
+    z-index: 2;
+    font-weight: bold;
+  }
+  
+  
+  * {
+      box-sizing: border-box;
+  }
+  
+  body {
+      font-family: Montserrat, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+  }
+  
+  h3 {
+      margin: 10px 0;
+    color: #486989;     ;
+  }
+  
+  h6 {
+      margin: 5px 0;
+      text-transform: uppercase;
+    color: #8696FE  ;
+  }
+  
+  p.font-bold {
+      font-size: 4px;
+      line-height: 21px;
+    color: #0A1931    ;
+  
+  }
+  
+  .card-container {
+    background-color: #FFFBF5;          ;
+      border-radius: 5px;
+      box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.75);
+      padding-top: 20px;
+      position: relative;
+      width: 250px;
+      max-width: 100%;
+      text-align: center;
+  }
+  .cordonnees {
+      background-color: #EEEEEE;    ;
+      color: #495c83;    ;
+      text-align: left;
+      padding: 10px;
+      margin-top: 30px;
+    font-size: 16px;
+      line-height: 21px;
+  }
+  
+  
+  .card-container .round {
+      border: 1px solid #76ABAE  ;
+      border-radius: 50%;
+      padding: 7px;
+    width: 80px;
+    height: 80px;
+    margin-left: 8px;
+  
+  }
+  
+  
+  .cordonnees .list-item {
+    font-size: 12px;
+  }
+  
+  
+  

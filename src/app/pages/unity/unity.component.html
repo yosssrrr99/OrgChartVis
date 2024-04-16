@@ -1,0 +1,58 @@
+<main class="table" id="customers_table">
+    <section class="table__header">
+      <h1></h1>
+      <div class="input-group">
+        <input type="search" placeholder="Search Employee..." [(ngModel)]="searchEmployee">
+        <img src="https://www.freeiconspng.com/thumbs/search-icon-png/search-icon-png-22.png" alt="">
+      </div>
+    </section>
+    <section class="table__body">
+      <table>
+        <thead>
+          <tr>
+            <th>Name <span class="icon-arrow">&UpArrow;</span></th>
+            <th>Grade <span class="icon-arrow">&UpArrow;</span></th>
+            <th>Email <span class="icon-arrow">&UpArrow;</span></th>
+            <th>Details <span class="icon-arrow">&UpArrow;</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Display only the rows for the current page -->
+          <ng-container *ngFor="let node of currentPageData">
+            <ng-container *ngTemplateOutlet="displayNode; context: { $implicit: node }"></ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+    </section>
+  
+    <!-- Pagination -->
+    <div class="pagination">
+      <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)">Prev..</button>
+      <button *ngFor="let page of totalPages()" [class.active]="page === currentPage" (click)="setPage(page)">
+        {{ page }}
+      </button>
+      <button [disabled]="currentPage === totalPages().length" (click)="setPage(currentPage + 1)">Next</button>
+    </div>
+  
+    <!-- Recursive template for displaying nodes -->
+    <ng-template #displayNode let-node>
+      <!-- Apply the filter here -->
+      <tr *ngIf="isMatch(node, searchEmployee)">
+        <td>
+          <img [src]="node.data?.image" alt="">
+          {{ node.data?.name }}
+        </td>
+        <td>{{ node.data?.title }}</td>
+        <td>{{ node.data?.email }}</td>
+        <td>
+          <p class="details">Details</p>
+        </td>
+      </tr>
+      <!-- Check if the node has children and iterate over them recursively -->
+      <ng-container *ngIf="node.children">
+        <ng-container *ngFor="let child of node.children">
+          <ng-container *ngTemplateOutlet="displayNode; context: { $implicit: child }"></ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-template>
+  </main>

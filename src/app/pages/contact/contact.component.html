@@ -1,0 +1,73 @@
+<app-header-image [backgroundImage]="'assets/images/others/contact.jpg'" 
+                  [bgImageAnimate]="false" 
+                  [contentOffsetToTop]="true"                
+                  [title]="'Recruitment Budget Envelope'"
+                  [desc]="''">
+</app-header-image>  
+
+<div class="px-3"> 
+    <div class="theme-container">
+        <mat-card class="main-content-header mb-5"> 
+            <div class="p-3"> 
+                <div fxLayout="row wrap" fxLayoutAlign="space-around" >
+                    <div fxFlex="100" fxFlex.gt-xs="33.3">
+                        <div fxLayout="column" fxLayoutAlign="center center" class="text-center">
+                            <mat-icon color="primary" class="mat-icon-lg">people</mat-icon>
+                            <h3 class="primary-color py-1">TEAM MEMBERS:  </h3>
+                            <span>15</span>
+                        </div>
+                    </div>
+                    <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
+                        <div fxLayout="column" fxLayoutAlign="center center">
+                            <mat-icon color="primary" class="mat-icon-lg">chair</mat-icon>
+                            <h3 class="primary-color py-1">VACANT POSITIONS :</h3>
+                            <span>4</span>
+                        </div>
+                    </div>
+                    <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
+                        <div fxLayout="column" fxLayoutAlign="center center">
+                            <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
+                            <h3 class="primary-color py-1">BUDGET :</h3>
+                            <span>5000</span>
+                        </div>
+                    </div>   
+                </div>  
+
+                <div fxLayout="row wrap" class="mt-5">  
+                    <div fxFlex="100" fxFlex.gt-sm="50" class="py-3" [ngClass.gt-sm]="(settings.rtl) ? 'pl-5' : 'pr-5'"> 
+                        <h1 class="secondary-font primary-color text-center mb-3">Liste des postes vacants :</h1>
+                        <form [formGroup]="contactForm" (ngSubmit)="onContactFormSubmit()" fxLayout="column">
+                            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="poste-item">
+                                <div class="poste-label">Collaborateur spring</div>
+                                <div fxFlex></div>
+                                <mat-icon color="primary">add_circle</mat-icon>
+                            </div>
+                            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="poste-item">
+                                <div class="poste-label">Collaborateur simphony</div>
+                                <div fxFlex></div>
+                                <mat-icon color="primary">add_circle</mat-icon>
+                            </div>
+                            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="poste-item">
+                                <div class="poste-label">Collaborateur reactjs</div>
+                                <div fxFlex></div>
+                                <mat-icon color="primary">add_circle</mat-icon>
+                            </div>
+                            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="poste-item">
+                                <div class="poste-label">Collaborateur angular</div>
+                                <div fxFlex></div>
+                                <mat-icon color="primary">add_circle</mat-icon>
+                            </div>
+                        </form>
+                        
+                    </div> 
+                    <div fxFlex="100" fxFlex.gt-sm="50" class="py-3">
+                        <app-budget-chart [budgetSpent]="2000" [budgetRemaining]="3000"></app-budget-chart>
+                    </div>
+                </div> 
+            </div>
+        </mat-card>  
+    </div> 
+</div>
+ 
+ 
+

@@ -1,0 +1,47 @@
+<mat-toolbar id="top-toolbar" class="top-toolbar">
+
+    
+   
+    <div fxLayout="row" fxLayoutAlign="end center" class=""> 
+    
+   
+     
+  </div>           
+</mat-toolbar>  
+<mat-toolbar id="main-toolbar" class="mat-elevation-z2" > 
+  <div class="theme-container" fxLayout="row" fxLayoutAlign="space-between center">
+    <span fxHide="false" fxHide.gt-sm>
+      <button mat-icon-button (click)="sidenavToggle()" class="p-0">
+        <mat-icon class="mat-icon-lg m-0">menu</mat-icon>
+      </button> 
+    </span>
+    <a class="logo" routerLink="/" ><app-logo></app-logo></a> 
+    <div fxShow="false" fxShow.gt-sm class="horizontal-menu">            
+        <app-horizontal-menu [menuParentId]="0"></app-horizontal-menu>
+    </div> 
+    <div fxLayout="row" fxLayoutAlign="start center">
+     
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item  routerLink="/login">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </button>
+        <button mat-menu-item >
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+   
+      <button mat-menu-item routerLink="/register">
+        <mat-icon>how_to_reg</mat-icon>
+        <span>Register</span>
+      </button>
+      </mat-menu>
+      
+      <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="User Actions" class="mx-2" fxShow="false" fxShow.gt-xs="true">
+        <mat-icon>person</mat-icon>
+      </button> 
+       
+    </div>   
+  </div>  
+   
+</mat-toolbar>
