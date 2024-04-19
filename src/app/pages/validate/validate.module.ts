@@ -5,15 +5,15 @@ import { SharedModule } from '../../shared/shared.module';
 
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { UnityComponent } from './unity.component';
+import { ValidateComponent } from './validate.component';
 
 
 export const routes: Routes = [
-  { path: '', component: UnityComponent, pathMatch: 'full' }
+  { path: '', component: ValidateComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
-  declarations: [UnityComponent],
+  declarations: [ValidateComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -22,4 +22,4 @@ export const routes: Routes = [
     DragDropModule
   ]
 })
-export class UnityModule { }
+export class ValidateModule { }

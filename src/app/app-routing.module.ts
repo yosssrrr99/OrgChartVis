@@ -27,7 +27,11 @@ const routes: Routes = [
         { path: 'unity', loadChildren: () => import('./pages/unity/unity.module').then(m => m.UnityModule) },
         { path: 'register', loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule) },
         { path: 'org', loadChildren: () => import('./pages/operational-unit/operational-unit.module').then(m => m.OperationalUnitModule) },
+        { path: 'history', loadChildren: () => import('./pages/historique/historique.module').then(m => m.HistoriqueModule) },
+        { path: 'validate', loadChildren: () => import('./pages/validate/validate.module').then(m => m.ValidateModule) },
+        { path: 'update', loadChildren: () => import('./pages/update/update.module').then(m => m.UpdateModule) },
         { path: 'terms-conditions', loadChildren: () => import('./pages/terms-conditions/terms-conditions.module').then(m => m.TermsConditionsModule) },
+
     ]
   },
   { path: 'landing', loadChildren: () => import('./pages/landing/landing.module').then(m => m.LandingModule) },

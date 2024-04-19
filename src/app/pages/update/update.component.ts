@@ -1,15 +1,13 @@
-
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-unity',
-  templateUrl: './unity.component.html',
-  styleUrls: ['./unity.component.scss']
+  selector: 'app-update',
+  templateUrl: './update.component.html',
+  styleUrls: ['./update.component.scss']
 })
-export class UnityComponent {
- 
-  
+export class UpdateComponent {
+
   data = [
     {
       "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/annafali.png",

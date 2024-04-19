@@ -1,15 +1,12 @@
-
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-unity',
-  templateUrl: './unity.component.html',
-  styleUrls: ['./unity.component.scss']
+  selector: 'app-validate',
+  templateUrl: './validate.component.html',
+  styleUrls: ['./validate.component.scss']
 })
-export class UnityComponent {
- 
-  
+export class ValidateComponent {
+
   data = [
     {
       "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/annafali.png",
@@ -91,25 +88,8 @@ export class UnityComponent {
 
 
 
-  onDrop(event: CdkDragDrop<any[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data, 
-        event.previousIndex, 
-        event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
    
-     
-    }
-  }
-  
+    
  
-
-  
 }
+

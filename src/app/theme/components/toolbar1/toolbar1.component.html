@@ -31,14 +31,18 @@
           <span>Logout</span>
         </button>
    
-      <button mat-menu-item routerLink="/register">
-        <mat-icon>how_to_reg</mat-icon>
-        <span>Register</span>
-      </button>
+     
       </mat-menu>
       
-      <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="User Actions" class="mx-2" fxShow="false" fxShow.gt-xs="true">
+     
+      <button mat-icon-button  matTooltip="notifications" class="mx-2" fxShow="false" fxShow.gt-xs="true">
+        <mat-icon>notifications</mat-icon>
+      </button> 
+      <button mat-icon-button  matTooltip="Profile" class="mx-2" fxShow="false" fxShow.gt-xs="true">
         <mat-icon>person</mat-icon>
+      </button> 
+      <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="User Actions" class="mx-2" fxShow="false" fxShow.gt-xs="true">
+        <mat-icon>list</mat-icon>
       </button> 
        
     </div>   

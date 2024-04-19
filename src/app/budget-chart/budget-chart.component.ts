@@ -21,7 +21,7 @@ export class BudgetChartComponent implements OnInit {
             label: 'Budget',
             data: [this.budgetSpent, this.budgetRemaining],
             backgroundColor: [
-              'rgba(255, 99, 132, 0.5)', // Couleur des dépenses
+              'blue', // Couleur des dépenses
               'rgba(54, 162, 235, 0.5)' // Couleur du budget restant
             ],
             borderColor: [
@@ -31,8 +31,10 @@ export class BudgetChartComponent implements OnInit {
             borderWidth: 1
           }]
         },
+      
         options: {
           responsive: true,
+          maintainAspectRatio: false, 
           plugins: {
             legend: {
               position: 'top',

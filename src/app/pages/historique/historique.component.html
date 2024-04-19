@@ -1,0 +1,51 @@
+<div class="px-3"> 
+    <div class="theme-container">
+      <mat-card class="main-content-header mb-5"> 
+        <div class="p-3"> 
+          <div fxLayout="row wrap" fxLayoutAlign="space-around">
+            <div fxFlex="100" >
+              <h2 class="primary-color py-1 text-center"> Envelope History  </h2>
+            </div>
+          </div>  
+        </div>
+      </mat-card>  
+    </div> 
+  </div>
+  
+  
+  
+  
+  
+  <div class="container" cdkDropListGroup>
+  <main class="table" id="customers_table">
+      
+      <section class="table__body">
+        <table>
+          <thead>
+            <tr>
+              <th>Name <span class="icon-arrow">&UpArrow;</span></th>
+              <th>Grade <span class="icon-arrow">&UpArrow;</span></th>
+              <th>Email <span class="icon-arrow">&UpArrow;</span></th>
+              <th>Details <span class="icon-arrow">&UpArrow;</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let employee of data" cdkDrag>
+              <td>
+                <img [src]="employee.image" alt="">
+                {{ employee.name }}
+              </td>
+              <td>{{ employee.title }}</td>
+              <td>{{ employee.email }}</td>
+              <td>
+                <p class="details">Details</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  
+  
+  
