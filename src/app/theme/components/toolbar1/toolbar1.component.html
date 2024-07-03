@@ -1,10 +1,8 @@
 <mat-toolbar id="top-toolbar" class="top-toolbar">
 
-    
    
     <div fxLayout="row" fxLayoutAlign="end center" class=""> 
     
-   
      
   </div>           
 </mat-toolbar>  
@@ -16,9 +14,12 @@
       </button> 
     </span>
     <a class="logo" routerLink="/" ><app-logo></app-logo></a> 
-    <div fxShow="false" fxShow.gt-sm class="horizontal-menu">            
-        <app-horizontal-menu [menuParentId]="0"></app-horizontal-menu>
+    <div fxShow="false" fxShow.gt-sm class="horizontal-menu" *ngIf="userRole === 'ALLHRLO'">            
+      <app-vertical-menu [menuParentId]="0"></app-vertical-menu>
     </div> 
+    <div fxShow="false" fxShow.gt-sm class="horizontal-menu" >            
+      <app-vertical-menu [menuParentId]=""></app-vertical-menu>
+  </div> 
     <div fxLayout="row" fxLayoutAlign="start center">
      
       <mat-menu #menu="matMenu">
@@ -26,7 +27,7 @@
           <mat-icon>login</mat-icon>
           <span>Login</span>
         </button>
-        <button mat-menu-item >
+        <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>
           <span>Logout</span>
         </button>

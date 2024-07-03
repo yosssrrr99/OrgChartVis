@@ -1,17 +1,58 @@
+<div  fxLayoutAlign="center center"><h1 class="secondary-font p-2 text-center">Simulation Budgétaire de recrutement</h1></div>
+
+
 <div class="px-3"> 
-    <div class="theme-container">
-      <mat-card class="main-content-header mb-5"> 
-        <div class="p-3"> 
-          <div fxLayout="row wrap" fxLayoutAlign="space-around">
-            <div fxFlex="100" >
-              <h2 class="primary-color py-1 text-center"> Validate Envelope  </h2>
+
+  <div class="theme-container">
+    <mat-card class="main-content-header mb-5"> 
+      <div class="p-3"> 
+      
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <mat-form-field appearance="outline" class="manager-select-field">
+              <mat-label>ID Manager</mat-label>
+              <mat-select (selectionChange)="onManagerChange($event.value)">
+                <mat-option *ngFor="let manager of managers" [value]="manager">
+                  {{ manager }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        <div fxLayout="row wrap" fxLayoutAlign="space-around">
+        
+          <div fxFlex="100" fxFlex.gt-xs="25">
+            <div fxLayout="column" fxLayoutAlign="center center" class="text-center">
+              <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
+              <h3 class="primary-color py-1">Budget Annuel : </h3>
+              <span class="info-value">1900</span>
+            </div>      
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="25" ngClass.xs="mt-2">
+            <div fxLayout="column" fxLayoutAlign="center center">
+              <mat-icon color="primary" class="mat-icon-lg">monetization_on</mat-icon>
+              <h3 class="primary-color py-1">Min Budget :</h3>
+              <span class="info-value">{{minBudget}}</span>
             </div>
-          </div>  
-        </div>
-      </mat-card>  
-    </div> 
-  </div>
-  
+            </div>
+            <div fxFlex="100" fxFlex.gt-xs="25" ngClass.xs="mt-2">
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
+                <h3 class="primary-color py-1">Max Budget :</h3>
+                <span class="info-value">{{maxBudget}}</span>
+              </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="25" ngClass.xs="mt-2">
+            <div fxLayout="column" fxLayoutAlign="center center">
+              <mat-icon color="primary" class="mat-icon-lg">monetization_on</mat-icon>
+              <h3 class="primary-color py-1">GAB :</h3>
+              <span class="info-value">1100</span>
+            </div>
+          </div>   
+        </div>  
+      </div>
+    </mat-card>  
+  </div> 
+</div>
+
   
   
   
@@ -23,33 +64,32 @@
         <table>
           <thead>
             <tr>
-              <th>Name <span class="icon-arrow">&UpArrow;</span></th>
-              <th>Grade <span class="icon-arrow">&UpArrow;</span></th>
-              <th>Email <span class="icon-arrow">&UpArrow;</span></th>
-              <th>Details <span class="icon-arrow">&UpArrow;</span></th>
+              <th>Nombre de collaborateurs </th>
+              <th>Classification</th>
+              <th>date</th>
+              <th>status</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let employee of data" cdkDrag>
-              <td>
-                <img [src]="employee.image" alt="">
-                {{ employee.name }}
-              </td>
-              <td>{{ employee.title }}</td>
-              <td>{{ employee.email }}</td>
+            <tr *ngFor="let emp of employee">
+             
+              <td>{{ emp.number }}</td>
+              <td>{{ emp.classification }}</td>
+              <td>{{ emp.date }}</td>
+              <td>{{ emp.typeStatus }}</td>
               <td>
                 <p class="details">Details</p>
               </td>
             </tr>
           </tbody>
+  
         </table>
-        <div fxLayout="row" fxLayoutAlign="center">
-            <button mat-raised-button class="center-button" color="primary" style="margin-right: 10px;">Approuve</button>
-            <button mat-raised-button class="center-button" color="warn" style="margin-left: 10px;">Refuse</button>
+        <div fxLayout="row" fxLayoutAlign="center" style="margin-top: 30px;">
+          <button mat-raised-button class="center-button" color="primary" style="margin-right: 10px;" (click)="updateStatus()">Approuver</button>
+            <button mat-raised-button class="center-button" color="warn" style="margin-left: 10px;" (click)="updateStatusR()">Refuser</button>
           </div>
           
-      </section>
-      
+      </section> 
     </main>
   
   

@@ -1,51 +1,82 @@
+<div  fxLayoutAlign="center center"><h1 class="secondary-font p-2 text-center">Historique de l'Enveloppe</h1></div>
 <div class="px-3"> 
-    <div class="theme-container">
-      <mat-card class="main-content-header mb-5"> 
-        <div class="p-3"> 
-          <div fxLayout="row wrap" fxLayoutAlign="space-around">
-            <div fxFlex="100" >
-              <h2 class="primary-color py-1 text-center"> Envelope History  </h2>
+  <div class="theme-container">
+    <mat-card class="main-content-header mb-5"> 
+      <div class="p-3"> 
+        <div fxLayout="row wrap" fxLayoutAlign="space-around">
+          <div fxFlex="100" fxFlex.gt-xs="33.3">
+            <div fxLayout="column" fxLayoutAlign="center center" class="text-center">
+              <mat-icon color="primary" class="mat-icon-lg">business </mat-icon>
+              <h3 class="primary-color py-1">NOM DU DEPARTEMENT : </h3>
+              <span>{{organizationName}}</span>
             </div>
-          </div>  
-        </div>
-      </mat-card>  
-    </div> 
-  </div>
-  
-  
-  
-  
-  
-  <div class="container" cdkDropListGroup>
-  <main class="table" id="customers_table">
-      
-      <section class="table__body">
-        <table>
-          <thead>
-            <tr>
-              <th>Name <span class="icon-arrow">&UpArrow;</span></th>
-              <th>Grade <span class="icon-arrow">&UpArrow;</span></th>
-              <th>Email <span class="icon-arrow">&UpArrow;</span></th>
-              <th>Details <span class="icon-arrow">&UpArrow;</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let employee of data" cdkDrag>
-              <td>
-                <img [src]="employee.image" alt="">
-                {{ employee.name }}
-              </td>
-              <td>{{ employee.title }}</td>
-              <td>{{ employee.email }}</td>
-              <td>
-                <p class="details">Details</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
+            <div fxLayout="column" fxLayoutAlign="center center">
+              <mat-icon color="primary" class="mat-icon-lg">people</mat-icon>
+              <h3 class="primary-color py-1">Collabortaurs :</h3>
+              <span>{{data.length}}</span>
+            </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
+            <div fxLayout="column" fxLayoutAlign="center center">
+              <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
+              <h3 class="primary-color py-1">BUDGET :</h3>
+              <span>{{ minBudget }} {{ maxBudget }}</span>
+            </div>
+          </div>   
+        </div>  
+      </div>
+    </mat-card>  
+  </div> 
+</div>
 
-    </main>
-  
-  
-  
+
+
+
+
+
+
+<div class="container" cdkDropListGroup>
+<main class="table" id="customers_table">
+    
+    <section class="table__body">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre de collaborateurs </th>
+            <th>Classificationpan</th>
+            <th>Min Budget  </th>
+            <th>Max Budget </th>
+            <th>date</th>
+            <th>status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let emp of employee">
+           
+            <td>{{ emp.number }}</td>
+            <td>{{ emp.classification }}</td>
+            <td>{{ emp.minbudget }}</td>
+            <td>{{ emp.maxbudget }}</td>
+            <td>{{ emp.date }}</td>
+            <td>{{ emp.status }}</td>
+            <td>
+              
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+      <div fxLayout="row" fxLayoutAlign="center" style="margin-top: 30px;">
+        <button mat-raised-button class="center-button" color="primary" (click)="updateEnvelope()" >Modifier</button>
+      </div>
+     
+        
+    </section>
+    
+  </main>
+
+
+

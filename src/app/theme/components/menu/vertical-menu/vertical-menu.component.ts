@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
 import { MenuService } from '../menu.service';
 import { Menu } from '../menu.model';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-vertical-menu',
@@ -8,19 +9,26 @@ import { Menu } from '../menu.model';
   styleUrls: ['./vertical-menu.component.scss'],
   providers: [ MenuService ]
 })
-export class VerticalMenuComponent implements OnInit {
+export class VerticalMenuComponent  implements OnInit {
   @Input('menuParentId') menuParentId = 0;
-  public menuItems: Array<Menu> = [];
+  public menuItems: Array<Menu> = []; 
+  @ViewChildren(MatMenuTrigger) triggers!: QueryList<MatMenuTrigger>;
+
   constructor(public menuService:MenuService) { }
 
   ngOnInit() {
-    this.menuItems = this.menuService.getVerticalMenuItems();
+    this.menuItems = this.menuService.getVerticalMenuItems(); // Remplacez cela par votre propre logique de récupération des items de menu vertical
     this.menuItems = this.menuItems.filter(item => item.parentId == this.menuParentId);
   }
 
-  onClick(menuId:number){
-    this.menuService.toggleMenuItem(menuId);
-    this.menuService.closeOtherSubMenus(this.menuService.getVerticalMenuItems(), menuId);    
+  public closeOthers(trigger: MatMenuTrigger) {
+    const currentIndex: number = this.triggers.toArray().findIndex(t => t == trigger);
+    this.triggers.forEach((menu, index) => {
+      if (index != currentIndex) {
+        menu.closeMenu();
+      }
+    });
   }
+
 
 }

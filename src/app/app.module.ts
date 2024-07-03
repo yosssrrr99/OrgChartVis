@@ -31,16 +31,15 @@ import { OrganizationChartModule } from 'primeng/organizationchart';
 import { PagesComponent } from './pages/pages.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component'; 
 import { Toolbar1Component } from './theme/components/toolbar1/toolbar1.component';
-import { UserMenuComponent } from './theme/components/user-menu/user-menu.component';  
-import { ContactsComponent } from './theme/components/contacts/contacts.component'; 
+import { UserMenuComponent } from './theme/components/user-menu/user-menu.component';   
 import { HorizontalMenuComponent } from './theme/components/menu/horizontal-menu/horizontal-menu.component';
 import { VerticalMenuComponent } from './theme/components/menu/vertical-menu/vertical-menu.component';
 import { FooterComponent } from './theme/components/footer/footer.component'; 
 import { LockScreenComponent } from './pages/lock-screen/lock-screen.component';
-import { OperationalUnitComponent } from './pages/operational-unit/operational-unit.component';
 import { FormsModule } from '@angular/forms';
-import { table } from 'console';
-import { UnityComponent } from './pages/unity/unity.component';
+import { HorizontalMenuManagerComponent } from './theme/components/menu/horizontal-menu-manager/horizontal-menu-manager.component';
+
+
 
 
 @NgModule({
@@ -48,11 +47,11 @@ import { UnityComponent } from './pages/unity/unity.component';
     AppComponent,
     PagesComponent,
     NotFoundComponent,
-    UserMenuComponent,  
-    ContactsComponent, 
+    UserMenuComponent,   
     Toolbar1Component,
     HorizontalMenuComponent,
     VerticalMenuComponent,
+    HorizontalMenuManagerComponent,
     FooterComponent,
     LockScreenComponent
   ],

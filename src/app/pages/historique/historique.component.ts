@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { BudgetService, EmployeeRec } from 'src/app/budget.service';
+import { Employee,EmployeeService } from 'src/app/employee-service';
 
 @Component({
   selector: 'app-historique',
@@ -7,86 +10,54 @@ import { Component } from '@angular/core';
 })
 export class HistoriqueComponent {
 
-  data = [
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/annafali.png",
-      "name": "Anna Fali",
-      "title": "CFO",
-      "email": "annafeli@gmail.com",
-      "tel": "96000123"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/stephenshaw.png",
-      "name": "Stephen",
-      "title": "Financial Analyst",
-      "email": "stephen@gmail.com",
-      "tel": "51321654"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/elwinsharvill.png",
-      "name": "Amanda",
-      "title": "Finance Manager",
-      "email": "amandasharvil@gmail.com",
-      "tel": "96000123"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/stephenshaw.png",
-      "name": "Ivan",
-      "title": "Budget Analyst",
-      "email": "ivanshaw@gmail.com",
-      "tel": "21006789"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png",
-      "name": "Christopher",
-      "title": "Treasury Analyst",
-      "email": "christopher@yahoo.fr",
-      "tel": "50000123"
+  employee:EmployeeRec[]=[]
+  minBudget:any;
+  maxBudget:any;
+  updateBudget:any=5000;
+  data: Employee[] = [];
+  departmentId: string = 'P00000653';
+  organizationName: string = '';
+    constructor(private budgetService:BudgetService,private employeeService:EmployeeService,public router:Router){}
+  
+    ngOnInit(): void {
+      this.getEmployees();
+      this.getEmployeesByIdOrg();
     }
-  ];
-
-
-
-
-  dataVacant= [
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/annafali.png",
-      "name": "Anna Fali",
-      "title": "CFO",
-      "email": "annafeli@gmail.com",
-      "tel": "96000123"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/stephenshaw.png",
-      "name": "Stephen",
-      "title": "Financial Analyst",
-      "email": "stephen@gmail.com",
-      "tel": "51321654"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/elwinsharvill.png",
-      "name": "Amanda",
-      "title": "Finance Manager",
-      "email": "amandasharvil@gmail.com",
-      "tel": "96000123"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/stephenshaw.png",
-      "name": "Ivan",
-      "title": "Budget Analyst",
-      "email": "ivanshaw@gmail.com",
-      "tel": "21006789"
-    },
-    {
-      "image": "https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png",
-      "name": "Christopher",
-      "title": "Treasury Analyst",
-      "email": "christopher@yahoo.fr",
-      "tel": "50000123"
+  
+    getEmployeesByIdOrg(): void {
+      this.budgetService.getEmployeesByDepartment(this.departmentId)
+        .subscribe((employees: EmployeeRec[]) => {
+       this.employee=employees;
+        console.log(employees);
+  
+           });
     }
-  ];
+    getEmployees(): void {
+      this.employeeService.getEmployeesByDepartment(this.departmentId)
+        .subscribe((employees: Employee[]) => {
+          this.data = employees;
+         
+  
+          if(this.data[0].nomorg){
+            this.organizationName=this.data[0].nomorg;
+          }
+          
+        });
+    }
+      
+    public updateEnvelope() {
+      // Utilisation du Router pour naviguer vers le composant de mise à jour de l'enveloppe avec l'ID en paramètre
+      this.router.navigate(['/update']);
+   
+    }
 
-
+         
+    updateStatus(id:number) {
+       // ID de l'employé à mettre à jour (remplacer par votre logique)
+      this.employeeService.updateEmployeeStatus(id).subscribe(() => {
+        console.log('Statut mis à jour avec succès.');
+      });
+    }
 
    
     

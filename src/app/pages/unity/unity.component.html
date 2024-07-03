@@ -1,28 +1,36 @@
+<div  fxLayoutAlign="center center"><h1 class="secondary-font p-2 text-center">Simulation Budgétaire de recrutement</h1></div>
 <div class="px-3"> 
   <div class="theme-container">
     <mat-card class="main-content-header mb-5"> 
       <div class="p-3"> 
         <div fxLayout="row wrap" fxLayoutAlign="space-around">
-          <div fxFlex="100" fxFlex.gt-xs="33.3">
+          <div fxFlex="100" fxFlex.gt-xs="30">
             <div fxLayout="column" fxLayoutAlign="center center" class="text-center">
-              <mat-icon color="primary" class="mat-icon-lg">people</mat-icon>
-              <h3 class="primary-color py-1">Spring MEMBERS:  </h3>
-              <span>7</span>
+              <mat-icon color="primary" class="mat-icon-lg">monetization_on </mat-icon>
+              <h3 class="primary-color py-1">Budget Annuel : </h3>
+              <span class="info-value">{{budgetAnnuel1}}</span>
             </div>
           </div>
-          <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
-            <div fxLayout="column" fxLayoutAlign="center center">
-              <mat-icon color="primary" class="mat-icon-lg">chair</mat-icon>
-              <h3 class="primary-color py-1">VACANT POSITIONS :</h3>
-              <span>2</span>
-            </div>
-          </div>
-          <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
+          <div fxFlex="100" fxFlex.gt-xs="30" ngClass.xs="mt-2">
             <div fxLayout="column" fxLayoutAlign="center center">
               <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
-              <h3 class="primary-color py-1">BUDGET :</h3>
-              <span>5000</span>
+              <h3 class="primary-color py-1">Budget Global :</h3>
+              <mat-form-field appearance="outline" class="small-input-field">
+                <input class="info-value" matInput type="number" [(ngModel)]="budgetGlobal1" required>
+              </mat-form-field>
             </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="30" class="info-box mt-2"
+          [ngClass]="{'negative': gab1 < 0}">
+       <div fxLayout="column" fxLayoutAlign="center center">
+         <mat-icon color="primary" class="mat-icon-lg" [ngClass]="{'red-icon': gab1 < 0}">monetization_on</mat-icon>
+         <h3 class="primary-color py-1" [ngClass]="{'red-text': gab1 < 0}">Budget Restant:</h3>
+         <span class="info-value" 
+    [ngClass]="{'red-text': gab1 < 0, 'blink': isBlinking && gab1 < 0}"
+    (click)="handleClick()">
+{{ gab1 }}
+</span>
+</div>
           </div>   
         </div>  
       </div>
@@ -32,31 +40,24 @@
 
 
 
-<div class="container" cdkDropListGroup>
+<div class="container" >
 <main class="table" id="customers_table">
     
     <section class="table__body">
       <table>
         <thead>
           <tr>
-            <th>Name <span class="icon-arrow">&UpArrow;</span></th>
-            <th>Grade <span class="icon-arrow">&UpArrow;</span></th>
-            <th>Email <span class="icon-arrow">&UpArrow;</span></th>
-            <th>Details <span class="icon-arrow">&UpArrow;</span></th>
+            <th>Nom et Prénom</th>
+            <th>Poste<span class="icon-arrow">&UpArrow;</span></th>
           </tr>
         </thead>
-        <tbody cdkDropList 
-                id="tab1" 
-                [cdkDropListConnectedTo]="('tab2')"
-                (cdkDropListDropped)="onDrop($event)" 
-                [cdkDropListData]="data">
-          <tr *ngFor="let employee of data" cdkDrag>
+        <tbody>
+          <tr *ngFor="let employee of data">
             <td>
-              <img [src]="employee.image" alt="">
-              {{ employee.name }}
+             <img [src]="getImageSrc(employee.blobData)" alt="employee image">
+             {{ employee.prenom }} {{ employee.nomuse }}
             </td>
-            <td>{{ employee.title }}</td>
-            <td>{{ employee.email }}</td>
+            <td>{{ employee.poste }}</td>
             <td>
               <p class="details">Details</p>
             </td>
@@ -64,42 +65,38 @@
         </tbody>
       </table>
     </section>
-    <button mat-raised-button  class="center-button" color="primary" >Confirm</button>
+  
   </main>
 
 
   <main class="table" id="customers_table">
-    
     <section class="table__body">
-      <table>
-        <thead>
-          <tr>
-            <th>Name <span class="icon-arrow">&UpArrow;</span></th>
-            <th>Grade <span class="icon-arrow">&UpArrow;</span></th>
-            <th>Email <span class="icon-arrow">&UpArrow;</span></th>
-            <th>Details <span class="icon-arrow">&UpArrow;</span></th>
-          </tr>
-        </thead>
-        <tbody cdkDropList 
-                id="tab2" 
-                (cdkDropListDropped)="onDrop($event)" 
-                [cdkDropListData]="dataVacant">
-          <tr *ngFor="let employee of dataVacant" cdkDrag>
-            <td>
-              <img [src]="employee.image" alt="">
-              {{ employee.name }}
-            </td>
-            <td>{{ employee.title }}</td>
-            <td>{{ employee.email }}</td>
-            <td>
-              <p class="details">Details</p>
-            </td>
-          </tr>
-        </tbody>
-        
-      </table>
+      <div *ngFor="let dynamicRow of dynamicRows; let i = index" class="dynamic-row">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Classification {{ i + 1 }}</mat-label>
+          <input matInput type="number" [(ngModel)]="dynamicRow.number" (input)="onInputChange(i)">
+        </mat-form-field>
+        <mat-form-field style="margin-left: 15px;" appearance="outline" class="w-100">
+          <mat-label>Select Classification</mat-label>
+              <mat-select [(ngModel)]="dynamicRow.class" (selectionChange)="onClassChange($event.value, i)">
+            <mat-option value="junior">Junior</mat-option>
+            <mat-option value="senior">Senior</mat-option>
+            <mat-option value="confirme">Confirmé</mat-option>
+            <mat-option value="aspa">Junior Anapec</mat-option>
+            <!-- Ajoutez d'autres options selon vos besoins -->
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button color="primary" matTooltip="ajouter" class="mx-2" fxShow="false" fxShow.gt-xs="true" (click)="addRow(i)">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" matTooltip="annuler" class="mx-2" fxShow="false" fxShow.gt-xs="true" (click)="removeRow(i)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
     </section>
+    <button mat-raised-button  class="center-button" color="primary" (click)="confirm()" [disabled]="emptySelection">Confirm</button>
   </main>
+  
 
 
 

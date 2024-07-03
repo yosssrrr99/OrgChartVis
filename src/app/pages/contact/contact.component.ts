@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms'; 
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ChartData, ChartOptions } from 'chart.js';
 import { AppService } from 'src/app/app.service';
 import { AppSettings, Settings } from 'src/app/app.settings';
 import { emailValidator } from 'src/app/theme/utils/app-validators';
@@ -290,42 +291,43 @@ export class ContactComponent implements OnInit {
                 public snackBar: MatSnackBar ) { 
         this.settings = this.appSettings.settings; 
     }
+  
+  
+      public pieChartData: ChartData<'pie'> = {
+        labels: ['Junior', 'Senior', 'Confirme', 'Aspa'],
+        datasets: [{
+            data: [25, 25, 25, 25], // Example initial data
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+        }]
+    };
+    public pieChartOptions: ChartOptions<'pie'> = {
+        responsive: true,
+    };
 
     ngOnInit() {
         this.budgetSpent = "budget Spent"
         this.budgetRemaining="BudgeT REMAINING"
-        this.contactForm = this.formBuilder.group({
-            name: ['', Validators.required],
-            email: ['', Validators.compose([Validators.required, emailValidator])],
-            phone: ['', Validators.required],
-            message: ['', Validators.required]
-        });
+
+        this.fetchBudgetData();
+        
     }
 
 
 
- 
-    public onContactFormSubmit():void {
-        if (this.contactForm.valid) {
-            console.log(this.contactForm.value);
-            let contact = this.contactForm.value;
-            let data = {
-                Fullname: contact.name,
-                Email: contact.email,
-                Comment: contact.message
-            }
-            this.appService.PostMessage(data).subscribe(response => { 
-                console.log(response)
-                location.href = 'https://mailthis.to/confirm' 
-            }, error => {
-                console.warn(error.responseText)
-                console.log({ error });
-                if(error.error){
-                    this.snackBar.open(error.error, '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 }); 
-                }  
-            }); 
-
-        }
+    fetchBudgetData() {
+        // Replace with actual logic to fetch data
+        const budgetData = { junior: 30, senior: 25, confirme: 20, aspa: 25 };
+        this.updatePieChart(budgetData);
     }
+
+    updatePieChart(budgetData: { [key: string]: number }) {
+        this.pieChartData.datasets[0].data = [
+            budgetData.junior,
+            budgetData.senior,
+            budgetData.confirme,
+            budgetData.aspa
+        ];
+    }
+
 
 }

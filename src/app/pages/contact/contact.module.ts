@@ -11,7 +11,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ContactComponent,BudgetChartComponent],
+  declarations: [ContactComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

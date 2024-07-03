@@ -1,21 +1,24 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { MatPaginator } from '@angular/material/paginator';
 import { error } from 'console';
 import { response } from 'express';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { filter, map } from 'rxjs/operators';
 import { MenuItem, Pagination } from 'src/app/app.models';
 import { AppService } from 'src/app/app.service';
 import { AppSettings, Settings } from 'src/app/app.settings';
+import { DocumentService } from 'src/app/document.service';
 import { FileService } from 'src/app/file.service';
 
 
 
 interface Document {
-  file: string;
   userName: string;
+  fileName:string;
+  category:string;
 }
 
 
@@ -31,6 +34,7 @@ export class MenuComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   public menuItems: MenuItem[] = [];
   public categories:any[] = [];
+  public documentsList:any[] = [];
   public viewType: string = 'grid';
   public viewCol: number = 25;
   public count: number = 12;
@@ -42,13 +46,16 @@ export class MenuComponent implements OnInit {
   public settings: Settings;
   selectedFileName: string = '';
   userName: string = '';
+  category : string='';
+  image: Blob;
 
-  selectedFile!:File;
+  selectedFile:any[]=[];
   filenames: string;
   documentList:Document[]=[]
+  fileName: string = '';
  
 
-  constructor(public appSettings:AppSettings, public appService:AppService,public fileService:FileService, public mediaObserver: MediaObserver, private httpClient:HttpClient) {
+  constructor(public appSettings:AppSettings, public appService:AppService,public fileService:FileService, public mediaObserver: MediaObserver, private httpClient:HttpClient,private documentService: DocumentService) {
     this.settings = this.appSettings.settings; 
     this.watcher = mediaObserver.asObservable()
     .pipe(filter((changes: MediaChange[]) => changes.length > 0), map((changes: MediaChange[]) => changes[0]))
@@ -79,40 +86,92 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCategories();
-    this.getDocumentList();
+    
+    this.selectCategory("all");
     
    
   }
-  public getDocumentList() {
-    this.httpClient.get<Document[]>("http://localhost:9095/Cool/user?name=yosr").subscribe(response => {
-      this.documentList = response;
-      console.log(this.documentList);
-    }, error => {
-      console.log("error occured when fetching")
-    });
+  public async getDocumentList(): Promise<Document[]> {
+    try {
+      return await this.httpClient.get<Document[]>("http://localhost:9095/Cool/api/files/all").toPromise();
+    } catch (error) {
+      throw error;
+    }
   }
+  
 
+  loadImage(filename: string): void {
+    this.documentService.getImage(filename).subscribe(
+      data => {
+        this.image = data;
+        // Faites quelque chose avec l'image, par exemple l'afficher dans une balise <img>
+      },
+      error => {
+        console.error('Erreur lors du chargement de l\'image:', error);
+      }
+    );
+  }
+  
+
+ 
+  
   ngOnDestroy(){ 
     this.watcher.unsubscribe();
   }
 
-  public getCategories(){
-    this.appService.getCategories().subscribe(categories=>{
-      this.categories = categories;
-      this.appService.Data.categories = categories;
-    })
-  } 
-  public selectCategory(id:number){
-    this.selectedCategoryId = id;
-    this.menuItems.length = 0;
-    this.resetPagination();
-    this.getMenuItems();
-    this.sidenav.close();
+
+  public async selectCategory(category: string): Promise<void> {
+    if (category === 'all') {
+      // Si la catégorie sélectionnée est "Others" ou "All Documents",
+      // récupérez tous les documents sans filtrer par catégorie
+      try {
+        this.documentsList = await this.getDocumentList();
+        console.log('Documents récupérés :', this.documentsList);
+      } catch (error) {
+        console.error('Une erreur est survenue lors de la récupération des documents :', error);
+      }
+    } else {
+      // Sinon, récupérez les documents pour la catégorie spécifiée
+      this.documentService.getDocumentByCategory(category).subscribe(
+        (documents) => {
+          // Affectez les documents récupérés à la variable
+          this.documentsList = documents;
+          console.log('Documents récupérés :', this.documentsList);
+        },
+        (error) => {
+          console.error('Une erreur est survenue lors de la récupération des documents :', error);
+        }
+      );
+    }
   }
-  public onChangeCategory(event:any){ 
-    this.selectCategory(event.value);
+  
+
+  public onChangeCategory(event: any): void { 
+    const selectedCategory = event.value;
+
+    switch (selectedCategory) {
+      case 0:
+        this.selectCategory('all');
+        break;
+      case 1:
+        this.selectCategory('certificat');
+        break;
+      case 2:
+        this.selectCategory('cv');
+        break;
+      case 3:
+        this.selectCategory('assignment letter');
+        break;
+      
+        default:
+          // Gérer les cas non prévus
+          console.warn('Catégorie non gérée :', selectedCategory);
+          break;
+    }
   }
+
+
+  
 
   public getMenuItems(){
     this.appService.getMenuItems().subscribe(data => {
@@ -169,36 +228,70 @@ export class MenuComponent implements OnInit {
     window.scrollTo(0,0);  
   }
   onFileSelected(event:any){
-   const file=this.selectedFile=event.target.files[0];
-   this.selectedFileName = file ? file.name : ''; 
+   const file=this.selectedFile = Array.from(event.target.files);
+   this.selectedFileName = this.selectedFile.map(file => file.name).join(', ');
+
     
   }
   save():void{
-    const formData = new FormData();
-    formData.append("file",this.selectedFile);
-    formData.append("name",this.userName);
-
-   
-
-    this.httpClient.post("http://localhost:9095/Cool/user", formData).subscribe(response=>{
-       console.log(response);
-       this.getDocumentList();
-    },error=>{
-      console.log(error);
+    this.selectedFile.forEach(file => {
+      const formData = new FormData();
+      formData.append("files", file);
+      formData.append("userName", this.userName);
+      formData.append("category", this.category);
+      this.httpClient.post("http://localhost:9095/Cool/api/files", formData).subscribe(
+        response => {
+          console.log("File uploaded successfully:", response);
+          this.selectCategory("all");
+        },
+        error => {
+          console.error("Error uploading file:", error);
+        }
+      );
     });
-console.log("saved");
 
   }
-  onDownloadFile(filename: string): void {
-    this.fileService.download(filename).subscribe(
-      event => {
-        console.log(event);
-       
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error);
-      }
-    );
-  }
+ 
+  isImage(fileName: string): boolean {
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    return extension ? imageExtensions.includes(extension) : false;
+}
 
+
+downloadFile(blobName: string): void {
+  this.documentService.downloadFile(blobName).subscribe(
+    (blob: Blob) => {
+      // Créez un objet URL pour le blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Créez un élément a pour le téléchargement
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = blobName;
+      
+      // Ajoutez l'élément a au document
+      document.body.appendChild(a);
+
+      
+      // Déclenchez le téléchargement
+      a.click();
+      
+    },
+    error => {
+      console.error('Erreur lors du téléchargement du fichier :', error);
+    }
+  );
+}
+deleteFile(filename: string): void {
+  this.documentService.deleteFile(filename).subscribe(
+    () => {
+      this.selectCategory("all");
+      console.log('File deleted successfully');
+    },
+    (error) => {
+      console.error('Error deleting file:', error);
+    }
+  );
+}
 } 

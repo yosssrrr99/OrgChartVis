@@ -16,6 +16,13 @@ body {
 }
 
 
+.dynamic-row {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 
 
 .table__header {
@@ -268,4 +275,19 @@ thead th.active,tbody td.active {
 
 .pagination button:hover:not(:disabled) {
   text-decoration: underline;
+}
+.info-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+.red-text {
+  color: red;
+}
+.blink {
+  animation: blinker 1s step-start infinite;
+}
+
+
+@keyframes blinker {  
+  50% { opacity: 0; }
 }

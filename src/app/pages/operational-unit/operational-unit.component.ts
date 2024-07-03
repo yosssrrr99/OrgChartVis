@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import datat from '../../data.json';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 @Component({
   selector: 'app-operational-unit',
   templateUrl: './operational-unit.component.html',
@@ -191,6 +192,22 @@ export class OperationalUnitComponent {
 
     // If no match found in the current node or its children, return false
     return false;
+  }
+
+
+  onDrop(event: CdkDragDrop<TreeNode[]>) {
+    // Récupérez l'élément glissé et sa position actuelle
+    const draggedNode = event.item.data;
+    const currentIndex = this.data.indexOf(draggedNode);
+  
+    // Si l'élément est déposé à l'intérieur de la liste
+    if (event.container === event.previousContainer) {
+      // Réorganisez l'élément dans la liste
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      // Sinon, transférez l'élément d'une liste à une autre
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    }
   }
 
 }

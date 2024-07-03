@@ -15,6 +15,8 @@ export class MenuService {
     return verticalMenuItems;
   }
 
+
+
   public getHorizontalMenuItems():Array<Menu> {
     return horizontalMenuItems;
   }

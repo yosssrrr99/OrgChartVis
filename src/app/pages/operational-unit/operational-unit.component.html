@@ -4,7 +4,7 @@
 
 </head>
 <!-- <app-navbar></app-navbar> -->
-<div class="body">
+<div class="body" >
   <!-- Search Input -->
   <div class="input-group">
     <input type="search" placeholder="Search Employee..." [(ngModel)]="searchEmployee" >
@@ -12,13 +12,15 @@
   </div>
  
   <div class="card custom-card overflow-x-auto"  >
-    <p-organizationChart [value]="data" selectionMode="multiple" [(selection)]="selectedNodes" styleClass="p-datatable-gridlines" style="color: black; " >
-      <ng-template let-node pTemplate="person">
-        <tr *ngIf="isMatch(node, searchEmployee)">
+    <p-organizationChart  [value]="data" selectionMode="multiple" [(selection)]="selectedNodes" styleClass="p-datatable-gridlines" style="color: black; "  >
+      <ng-template let-node pTemplate="person"  >
+     
+        <tr *ngIf="isMatch(node, searchEmployee)"  >
 
-        <div class="p-2 text-center custom-div" (mouseenter)="showOverlay($event, node)" (mouseleave)="hideOverlay()">
+        <div class="p-2 text-center custom-div" (mouseenter)="showOverlay($event, node)" (mouseleave)="hideOverlay()"  cdkDrag>
           <!-- Node content -->
-          <div class="flex" >
+       
+          <div class="flex" > 
             <img [src]="node.data.image" class="mb-3 custom-image" />
             <div class="data-container">
               <div class="font-bold" style="color: #2F58CD;">{{ node.data.name }}</div>
@@ -32,10 +34,10 @@
     <!-- Overlay Container -->
     <div *ngIf="showOverlayFlag" class="overlay" [style.left.px]="overlayPosition.left"
       [style.top.px]="overlayPosition.top">
-      <div class="card-container">
-        <div class="flex">
+      <div class="card-container" >
+        <div class="flex" >
           <img class="round"  [src]="selectedNode?.data?.image" alt="user" />
-          <div class="data-container">
+          <div class="data-container" >
             <h3>{{ selectedNode?.data?.name }}</h3>
             <h6>{{ selectedNode?.data?.dep }}</h6>
             <p>{{ selectedNode?.data?.title }}</p>
