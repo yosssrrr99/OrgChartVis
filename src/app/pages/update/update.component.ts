@@ -17,7 +17,7 @@ import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/confi
 export class UpdateComponent {
   updateBudget:any=5000;
   data: Employee[] = [];
-  departmentId: string = 'P00000653 ';
+  departmentId: string = '123456';
   organizationName: string = '';
 
   dynamicRows: any[] = [{ number: 0, class: 'junior' }];

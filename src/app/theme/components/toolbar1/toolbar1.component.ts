@@ -3,17 +3,21 @@ import { Router } from '@angular/router';
 
 import { AppService } from 'src/app/app.service'; 
 import { LoginService } from 'src/app/login.service';
+import { NotificationService } from 'src/app/notification.service';
 import { CartOverviewComponent } from 'src/app/shared/cart-overview/cart-overview.component'; 
 import { ReservationDialogComponent } from 'src/app/shared/reservation-dialog/reservation-dialog.component';
 
 @Component({
   selector: 'app-toolbar1',
-  templateUrl: './toolbar1.component.html' 
+  templateUrl: './toolbar1.component.html', 
+  styleUrls: ['./toolbar1.component.scss']
 })
 export class Toolbar1Component implements OnInit {
   @Output() onMenuIconClick: EventEmitter<any> = new EventEmitter<any>(); 
-  constructor(public appService:AppService,private loginService:LoginService,private router:Router) { }
+  constructor(public appService:AppService,private loginService:LoginService,private router:Router,private notificationService:NotificationService) { }
   userRole:String="";
+  pendingRequestsCount:number=0;
+  notifications:string[]=[];
   ngOnInit() { 
     this.fetchUserRole();
   }
@@ -26,6 +30,32 @@ export class Toolbar1Component implements OnInit {
   }
   public reservation(){ 
     this.appService.makeReservation(ReservationDialogComponent, null, true);   
+  }
+
+  loadNotifications(): void {
+    this.notificationService.getManagersByStatus().subscribe(
+      (data: any[]) => {
+        this.notifications = data;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des notifications:', error);
+      }
+    );
+  }
+
+  getPendingRequestsCount(): void {
+    this.notificationService.getPendingRequestsCount().subscribe(
+      (count: number) => {
+        this.pendingRequestsCount = count;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération du nombre de demandes en cours:', error);
+      }
+    );
+  }
+
+  navigateToRequests(): void {
+    this.router.navigate(['/validate']);
   }
 
   logout(): void {
@@ -46,13 +76,14 @@ export class Toolbar1Component implements OnInit {
   fetchUserRole(): void {
     this.loginService.getUserRole().subscribe(
       (role: string) => {
-        this.userRole = role; // Stocker le rôle récupéré dans la variable du composant
+        this.userRole = role; // Store the retrieved role in the component's variable
         console.log('Rôle de l\'utilisateur:', this.userRole);
-        // Vous pouvez maintenant utiliser this.userRole dans votre application Angular
+        // You can now use this.userRole in your Angular application
       },
       (error) => {
         console.error('Erreur lors de la récupération du rôle de l\'utilisateur:', error);
       }
     );
   }
+  
 }

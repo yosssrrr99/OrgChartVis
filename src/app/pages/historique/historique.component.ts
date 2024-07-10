@@ -15,12 +15,12 @@ export class HistoriqueComponent {
   maxBudget:any;
   updateBudget:any=5000;
   data: Employee[] = [];
-  departmentId: string = 'P00000653';
+  departmentId: string = '123456';
   organizationName: string = '';
     constructor(private budgetService:BudgetService,private employeeService:EmployeeService,public router:Router){}
   
     ngOnInit(): void {
-      this.getEmployees();
+   
       this.getEmployeesByIdOrg();
     }
   

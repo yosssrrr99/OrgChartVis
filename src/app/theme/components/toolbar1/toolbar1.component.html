@@ -14,10 +14,10 @@
       </button> 
     </span>
     <a class="logo" routerLink="/" ><app-logo></app-logo></a> 
-    <div fxShow="false" fxShow.gt-sm class="horizontal-menu" *ngIf="userRole === 'ALLHRLO'">            
-      <app-vertical-menu [menuParentId]="0"></app-vertical-menu>
+    <div fxShow="false" fxShow.gt-sm class="horizontal-menu" *ngIf="userRole === 'YMGRALL'">            
+      <app-horizontal-menu [menuParentId]="0"></app-horizontal-menu>
     </div> 
-    <div fxShow="false" fxShow.gt-sm class="horizontal-menu" >            
+    <div fxShow="false" fxShow.gt-sm class="horizontal-menu" *ngIf="userRole === 'ALLHRLO'">            
       <app-vertical-menu [menuParentId]=""></app-vertical-menu>
   </div> 
     <div fxLayout="row" fxLayoutAlign="start center">
@@ -35,10 +35,7 @@
      
       </mat-menu>
       
-     
-      <button mat-icon-button  matTooltip="notifications" class="mx-2" fxShow="false" fxShow.gt-xs="true">
-        <mat-icon>notifications</mat-icon>
-      </button> 
+      <app-notification *ngIf="userRole === 'ALLHRLO'"></app-notification>
       <button mat-icon-button  matTooltip="Profile" class="mx-2" fxShow="false" fxShow.gt-xs="true">
         <mat-icon>person</mat-icon>
       </button> 

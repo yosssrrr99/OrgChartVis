@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { LoginService } from 'src/app/login.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -31,7 +33,7 @@ export class SimulationComponent {
   idOrg:string='';
   updateBudget:any=5000;
   private _budgetGlobal1: number = 0;
-  budgetGlobal2: number;
+  private _budgetGlobal2: number = 0;
   percentageChangeTab1: any;
   percentageChangeTab2: any;
 
@@ -64,19 +66,40 @@ message: string;
 postes: Poste[] = [];
 motif:String[]=[];
 selectedPoste: string;
-  constructor(private organisationService: OrganisationService,private employeeService:EmployeeService,public dialog: MatDialog,private datePipe: DatePipe) {}
+isLoggedIn:boolean;
+  constructor(private organisationService: OrganisationService,private employeeService:EmployeeService,public dialog: MatDialog,private datePipe: DatePipe,private loginService:LoginService,private router:Router) {}
   ngOnInit() {
-
-    this.fetchOrganisations();
-
-   this.startBlinking();
-   this.employeeService.poste().subscribe((data) => {
-    this.postes = data;
-  });
-  this.employeeService.motif().subscribe((data) => {
-    this.motif = data;
-  });
+    this.checkLoggedInStatus();
   
+  }
+  private checkLoggedInStatus() {
+    this.loginService.isLoggedIn().subscribe(
+      (loggedIn: boolean) => {
+        this.isLoggedIn = loggedIn;
+        if (!this.isLoggedIn) {
+          this.router.navigate(['/login']);
+        } else {
+          this.fetchOrganisations();
+          this.startBlinking();
+          this.fetchPostesAndMotif();
+        }
+      },
+      (error) => {
+        console.error('Erreur lors de la vérification de la connexion:', error);
+        // Gérer l'erreur si nécessaire
+        this.isLoggedIn = false; // Définir à false en cas d'erreur
+        this.router.navigate(['/login']); // Rediriger vers la page de connexion en cas d'erreur
+      }
+    );
+  }
+  private fetchPostesAndMotif() {
+    this.employeeService.poste().subscribe((data) => {
+      this.postes = data;
+    });
+
+    this.employeeService.motif().subscribe((data) => {
+      this.motif = data;
+    });
   }
   get budgetGlobal1(): number {
     return this._budgetGlobal1;
@@ -86,9 +109,21 @@ selectedPoste: string;
     this._budgetGlobal1 = value;
     this.updateGab1();
   }
+  get budgetGlobal2(): number {
+    return this._budgetGlobal2;
+  }
+
+  set budgetGlobal2(value: number) {
+    this._budgetGlobal2 = value;
+    this.updateGab2();
+  }
 
   updateGab1() {
     this.gab1 = this.budgetGlobal1 - this.budgetAnnuel1;
+
+  }
+  updateGab2() {
+    this.gab2 = this.budgetGlobal2 - this.budgetAnnuel2;
   }
 
   startBlinking() {
@@ -141,7 +176,7 @@ getEmployeesByOrganisation(organisationId: string, listId: string): void {
     } else if (listId === 'tab2') {
       this.tab2Data = response.employees.filter(employee => employee.idorg === this.selectedOrganisation2.idorg);
       this.budgetAnnuel2 = response.totalSalary;
-      this.gab2 = this.budgetGlobal2 - this.budgetAnnuel2;
+      this.updateGab2();
       this.oldBuget2 = this.budgetGlobal2 - this.budgetAnnuel2;
     }
   });
@@ -203,14 +238,7 @@ getEmployeesByOrganisation(organisationId: string, listId: string): void {
         this.percentageChangeTab2 = await this.calculerPourcentageBudgetDep(this.budgetGlobal2, this.gab2);
         this.percentageChangeResTab2 = 100 - this.percentageChangeTab2;
 
-        console.log("Budget Annuel 1:", this.budgetAnnuel1);
-        console.log("Pourcentage Dépensé Tab1:", this.percentageChangeTab1);
-        console.log("Pourcentage Restant Tab1:", this.percentageChangeResTab1);
-        console.log("Budget Annuel 2:", this.budgetAnnuel2);
-        console.log("Pourcentage Dépensé Tab2:", this.percentageChangeTab2);
-        console.log("Pourcentage Restant Tab2:", this.percentageChangeResTab2);
-       // employee.selectedDate = this.selectedDate; // Ensure Date object
-       
+
     
       this.empZy3bDT0.dtef00= this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
      this.empZy3bDT0.typemotif=employee.selectedMotif;

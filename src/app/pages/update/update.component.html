@@ -35,34 +35,7 @@
 
 
 <div class="container" >
-<main class="table" id="customers_table">
-    
-    <section class="table__body">
-      <table>
-        <thead>
-          <tr>
-            <th>Nom et Prénom</th>
-            <th>Poste<span class="icon-arrow">&UpArrow;</span></th>
-            <th>Salaire</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let employee of data">
-            <td>
-             <img [src]="getImageSrc(employee.blobData)" alt="employee image">
-             {{ employee.prenom }} {{ employee.nomuse }}
-            </td>
-            <td>{{ employee.poste }}</td>
-            <td>{{employee.matsal}}</td>
-            <td>
-              <p class="details">Details</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-  
-  </main>
+
 
 
   <main class="table" id="customers_table">

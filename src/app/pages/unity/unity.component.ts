@@ -52,7 +52,7 @@ export class UnityComponent {
   }
 
   updateGab1() {
-    this.gab1 = this.budgetGlobal1 - this.budgetAnnuel1;
+    this.gab1 = this._budgetGlobal1-this.result.maxBudget;
   }
   getEmployeesByOrganisation(): void {
     this.employeeService.getEmployeesByDepartment(this.departmentId).subscribe((response: EmployeeAndTotalSalaryResponse) => {

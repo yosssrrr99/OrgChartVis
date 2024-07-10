@@ -38,6 +38,7 @@ import { FooterComponent } from './theme/components/footer/footer.component';
 import { LockScreenComponent } from './pages/lock-screen/lock-screen.component';
 import { FormsModule } from '@angular/forms';
 import { HorizontalMenuManagerComponent } from './theme/components/menu/horizontal-menu-manager/horizontal-menu-manager.component';
+import { NotificationComponent } from './notification/notification.component';
 
 
 
@@ -53,7 +54,8 @@ import { HorizontalMenuManagerComponent } from './theme/components/menu/horizont
     VerticalMenuComponent,
     HorizontalMenuManagerComponent,
     FooterComponent,
-    LockScreenComponent
+    LockScreenComponent,
+    NotificationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }), 
