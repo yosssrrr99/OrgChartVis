@@ -28,7 +28,6 @@ export class UpdateComponent {
   constructor(private employeeService: EmployeeService,private budgetService:BudgetService,public dialog: MatDialog, private snackBar: MatSnackBar,public router:Router){}
  
   ngOnInit(): void {
-    this.getEmployees();
     this.getEmployeesByIdOrg();
   }
 
@@ -49,18 +48,7 @@ export class UpdateComponent {
       });
   }
 
-  getEmployees(): void {
-    this.employeeService.getEmployeesByDepartment(this.departmentId)
-      .subscribe((employees: Employee[]) => {
-        this.data = employees;
-       
-
-        if(this.data[0].nomorg){
-          this.organizationName=this.data[0].nomorg;
-        }
-        
-      });
-  }
+  
   onKeyPress(event: KeyboardEvent, index: number): void {
     if (event.key === 'Enter') {
       // Mettre à jour le budget lorsque la touche "Entrée" est pressée

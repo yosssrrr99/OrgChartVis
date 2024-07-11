@@ -39,7 +39,6 @@ export class UnityComponent {
  
   ngOnInit(): void {
     this.startBlinking();
-    this.getEmployeesByOrganisation();
   }
 
   get budgetGlobal1(): number {

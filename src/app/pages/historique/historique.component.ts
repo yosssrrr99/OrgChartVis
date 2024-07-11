@@ -21,7 +21,7 @@ export class HistoriqueComponent {
   
     ngOnInit(): void {
    
-      this.getEmployeesByIdOrg();
+      
     }
   
     getEmployeesByIdOrg(): void {
