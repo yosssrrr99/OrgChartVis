@@ -12,7 +12,6 @@ import com.hraccess.openhr.beans.HRDataSourceParameters;
 import com.hraccess.openhr.dossier.*;
 import com.hraccess.openhr.exception.*;
 import com.hraccess.openhr.msg.*;
-import com.hraccess.openhr.security.UserDescription;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
@@ -80,9 +79,9 @@ public class EmployeeService {
     }*/
 
     public String login(String username,String password) throws UserConnectionException, AuthenticationException, ConfigurationException, SessionBuildException, SessionConnectionException {
-        HRApplication.configureLogs("G:\\pfe\\hos\\OpenHR\\src\\main\\java\\com\\hracces\\openhr\\conf\\log4j.properties");
+        HRApplication.configureLogs("C:\\Users\\mrekik\\OpenHR\\src\\main\\java\\com\\hracces\\openhr\\conf\\log4j.properties");
         session = HRSessionFactory.getFactory().createSession(
-                new PropertiesConfiguration("G:\\pfe\\hos\\OpenHR\\src\\main\\java\\com\\hracces\\openhr\\conf\\openhr.properties"));
+                new PropertiesConfiguration("C:\\Users\\mrekik\\OpenHR\\src\\main\\java\\com\\hracces\\openhr\\conf\\openhr.properties"));
         user = session.connectUser(username, password);
       //  System.out.println("+++++++++"+user.getRoles().get(0).getDelegation().getName());
       //  System.out.println("+++++++++"+user.getRoles().get(0).getTemplateLabel());
@@ -215,6 +214,98 @@ public class EmployeeService {
     }
 
 
+
+
+
+    public void loadAllEmployeeDossiersManager() throws HRException, ConfigurationException {
+        HRDossierCollectionParameters parameters = new HRDossierCollectionParameters();
+        parameters.setType(HRDossierCollectionParameters.TYPE_NORMAL);
+        parameters.setProcessName("MA001");
+        parameters.setDataStructureName("ZY");
+        parameters.addDataSection(new HRDataSourceParameters.DataSection("00"));
+        parameters.addDataSection(new HRDataSourceParameters.DataSection("10"));
+
+
+        HRDossierCollection dossierCollection = new HRDossierCollection(parameters, user.getMainConversation(), user.getRole("ALLHRLO(MA)"), new HRDossierFactory(HRDossierFactory.TYPE_DOSSIER));
+
+
+        IHRDictionary dictionary = session.getDictionary();
+
+
+        // HRDossierListIterator iterator = dossierCollection.loadDossiers("select a.MATCLE, b.DATSOR from ZY00 a,ZYES b where a.NUDOSS=b.NUDOSS");
+
+
+        IHRConversation conversation = user.getMainConversation();
+// Retrieving one of the user's roles to send the message
+        IHRRole role = user.getRole("YMGRALL(MA)");
+
+        HRMsgExtractData request = new HRMsgExtractData();
+        request.setFirstRow(0);
+        request.setMaxRows(100);
+        request.setSqlStatement("select a.MATCLE, b.DATSOR from ZY00 a,ZYES b where a.NUDOSS=b.NUDOSS");
+
+        HRResultExtractData result = (HRResultExtractData) conversation.send(request, role);
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+
+        List<Map<String, Object>> jsonData = new ArrayList<>();
+
+        if (result != null && result.getRows() != null && result.getRows().length > 0) {
+            Object[][] rows = result.getRows();
+
+            // Parcourir chaque ligne et ajouter les valeurs à la liste jsonData
+            for (Object[] row : rows) {
+                // Assurez-vous que la ligne contient des valeurs
+                if (row != null && row.length > 0) {
+                    // La première valeur correspond à MATCLE, la deuxième à DATSOR
+                    String MATCLE = (String) row[0];
+                    Date dateValue;
+
+                    // Vérifier le type de la deuxième valeur
+                    if (row[1] instanceof Timestamp) {
+                        // Convertir Timestamp en Date
+                        Timestamp timestamp = (Timestamp) row[1];
+                        dateValue = new Date(timestamp.getTime());
+                    } else if (row[1] instanceof Date) {
+                        // Si c'est déjà une Date, pas besoin de conversion
+                        dateValue = (Date) row[1];
+                    } else {
+                        // Gérer d'autres cas si nécessaire
+                        dateValue = null;
+                    }
+
+                    // Formater la date au format "jj-MM-aaaa"
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    String formattedDate = sdf.format(dateValue);
+
+                    // Créer une carte pour stocker les données de cette ligne
+                    Map<String, Object> rowData = new HashMap<>();
+                    rowData.put("MATCLE", MATCLE);
+                    rowData.put("DATSOR", formattedDate);
+
+                    // Ajouter les données de cette ligne à la liste jsonData
+                    jsonData.add(rowData);
+                }
+            }
+        } else {
+            // Aucun résultat à afficher
+            System.out.println("Aucun résultat disponible.");
+        }
+
+// Convertir la liste jsonData en JSON et l'afficher
+        try {
+            String jsonResult = objectMapper.writeValueAsString(jsonData);
+            System.out.println(jsonResult);
+        } catch (Exception e) {
+            // Gérer les erreurs de conversion en JSON
+            e.printStackTrace();
+        }
+
+    }
+
+
     public List<EmployeeData> loadEmpParDepartement() throws HRException, ConfigurationException, ParseException {
 
         HRDossierCollectionParameters parameters = new HRDossierCollectionParameters();
@@ -279,6 +370,7 @@ public class EmployeeService {
         return employeeDataList;
 
     }
+
 
     public List<Organisation> loadOrganisation() throws HRException, ConfigurationException, ParseException {
 
@@ -723,14 +815,14 @@ public class EmployeeService {
         return result;
     }
 
-    public void saveEmployeesAndBudget(List<EmployeeRec> employeeDtos, double minBudget, double maxBudget, String idorg) {
+    public void saveEmployeesAndBudget(List<EmployeeRec> employeeDtos, double budgetGlobal, double gab, String idorg) {
         for (EmployeeRec employeeDto : employeeDtos) {
             EmployeeRec employeeRec = new EmployeeRec();
             employeeRec.setIdorg(idorg);
             employeeRec.setNumber(employeeDto.getNumber());
             employeeRec.setClassification(employeeDto.getClassification());
-            employeeRec.setMinbudget(minBudget);
-            employeeRec.setMaxbudget(maxBudget);
+            employeeRec.setBudgetGlobal(budgetGlobal); // Change here
+            employeeRec.setGab(gab);
             employeeRec.setDate(LocalDate.now());
             employeeRec.setTypeStatus(Status.Encours);
             employeeRec.setIdManger(user.getUserId());
@@ -758,9 +850,9 @@ public class EmployeeService {
         return employeeRecRepositories.countfindMangerTypeStatus(status);
     }
 
-    public void updateEmployeeRecByIdorg(String idorg, List<EmployeeRec> updatedEmployeeRec, double minBudget, double maxBudget) {
-        List<EmployeeRec> employeeRecs = employeeRecRepositories.findAllByIdorg(idorg);
-
+    public void updateEmployeeRecByIdorg(String idorg, List<EmployeeRec> updatedEmployeeRec, double budgetGlobal, double gab) {
+        List<EmployeeRec> employeeRecs = employeeRecRepositories.findAllByIdManger(idorg);
+        String idManger="";
         for (int i = 0; i < employeeRecs.size(); i++) {
             EmployeeRec emp = employeeRecs.get(i);
 
@@ -768,22 +860,27 @@ public class EmployeeService {
                 EmployeeRec updatedRec = updatedEmployeeRec.get(i);
                 emp.setNumber(updatedRec.getNumber());
                 emp.setClassification(updatedRec.getClassification());
+                emp.setDate(LocalDate.now());
+                idManger=updatedRec.getIdorg();
             }
 
-            emp.setMinbudget(minBudget);
-            emp.setMaxbudget(maxBudget);
+            emp.setBudgetGlobal(budgetGlobal);
+            emp.setGab(gab);
 
             employeeRecRepositories.save(emp);
         }
 
         for (int i = employeeRecs.size(); i < updatedEmployeeRec.size(); i++) {
             EmployeeRec newRec = updatedEmployeeRec.get(i);
-            newRec.setIdorg(idorg);
-            newRec.setMinbudget(minBudget);
-            newRec.setMaxbudget(maxBudget);
+            newRec.setIdManger(idorg); // Assuming emp has idManager attribut
+            newRec.setIdorg(idManger); // Assuming idorg is passed as a parameter
+            newRec.setBudgetGlobal(budgetGlobal);
+            newRec.setDate(LocalDate.now());
+            newRec.setTypeStatus(Status.Encours);
             employeeRecRepositories.save(newRec);
         }
     }
+
 
     public void setStatus(String id) {
 
@@ -807,7 +904,7 @@ public class EmployeeService {
         for (int i = 0; i < employeeRecs.size(); i++) {
             EmployeeRec emp = employeeRecs.get(i);
             emp.setTypeStatus(Status.Refuser);
-          //  emp.setStatus(true);
+            //  emp.setStatus(true);
             employeeRecRepositories.save(emp);
         }
 
@@ -816,8 +913,12 @@ public class EmployeeService {
     }
 
 
+
+
+
+
     public void deleteEmployeeRecByIdorgAndCheckDate(String idorg) {
-        List<EmployeeRec> employeeRecs = employeeRecRepositories.findAllByIdorg(idorg);
+        List<EmployeeRec> employeeRecs = employeeRecRepositories.findAllByIdManger(idorg);
         if (!employeeRecs.isEmpty()) {
             for (EmployeeRec employeeRec : employeeRecs) {
                 LocalDate dateAdded = employeeRec.getDate();
@@ -831,6 +932,12 @@ public class EmployeeService {
                 }
             }
         }
+    }
+
+
+
+    public List<EmployeeRec> findDemandeRec(String id){
+        return employeeRecRepositories.findByIdManagerAndStatusWithLatestDate(id);
     }
 
 

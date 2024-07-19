@@ -1,6 +1,6 @@
-#Sun Jul 07 20:20:59 CEST 2024
-InstanceID=F%RE
-SessionURL=jar\:file\:/G\:/pfe/hos/OpenHR/src/main/resources/lib/hr-openhr-api-1.7.4.jar\!/com/hraccess/openhr/IHRSession.class
-CacheDir=G\:\\pfe\\hos\\OpenHR\\work
-IPAddress=10.112.54.2
-ApplicationID=*035CW103I37R
+#Fri Jul 19 17:19:44 CET 2024
+InstanceID=7\:8N
+SessionURL=jar\:file\:/C\:/Users/mrekik/OpenHR/src/main/resources/lib/hr-openhr-api-1.7.4.jar\!/com/hraccess/openhr/IHRSession.class
+CacheDir=C\:\\Users\\mrekik\\OpenHR\\work
+IPAddress=192.168.100.6
+ApplicationID=*0@Q0-O03~\:^E

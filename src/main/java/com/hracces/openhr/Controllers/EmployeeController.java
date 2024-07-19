@@ -13,6 +13,7 @@ import com.hraccess.openhr.dossier.HRDossierCollectionException;
 import com.hraccess.openhr.exception.*;
 import com.hraccess.openhr.msg.HRResultExtractData;
 import org.apache.commons.configuration.ConfigurationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,9 @@ public class EmployeeController {
     private final LoginService loginService;
 
 
+    @Autowired
+    private  NotificationService notificationService;
+
 
 
 
@@ -43,6 +47,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
         this.openHRService = openHRService;
         this.testService = testService;
+
         this.loginService = loginService;
 
     }
@@ -108,6 +113,11 @@ public class EmployeeController {
 
     }
 
+    @GetMapping("/loadM")
+    public void loadAllEmployeeDossiersManager() throws HRException, ConfigurationException{
+         employeeService.loadAllEmployeeDossiersManager();;
+    }
+
     @GetMapping("/poste")
     public void poste() throws ConfigurationException, HRException {
 
@@ -138,17 +148,22 @@ public class EmployeeController {
     }
 
 
-    @PostMapping("/save/{id}")
-    public ResponseEntity<Void> saveEmployeesAndBudget(@RequestBody List<EmployeeRec> employees,@PathVariable("id")String idorg) {
-        double minBudget=100000;
-        double maxBudget=200000;
-        // Calculer le budget min et max ici (vous pouvez utiliser la méthode de service appropriée pour cela)
-        minBudget -= employeeService.calculateMinBudget(employees);
-        maxBudget -= employeeService.calculateMaxBudget(employees);
 
+    @PostMapping("/save/{id}")
+    public ResponseEntity<Void> saveEmployeesAndBudget(
+            @RequestParam("budgetGlobal") double budgetGlobal,
+            @RequestParam("gab") double gab,
+            @RequestBody List<EmployeeRec> employees,
+            @PathVariable("id") String idorg) {
+
+        // Log des valeurs reçues pour vérification
+        System.out.println("Received data: ");
+        System.out.println("Budget Global: " + budgetGlobal);
+        System.out.println("Gab: " + gab);
+        System.out.println("Employees: " + employees);
 
         // Enregistrer les employés et les valeurs de budget dans la base de données
-        employeeService.saveEmployeesAndBudget(employees, minBudget, maxBudget,idorg);
+        employeeService.saveEmployeesAndBudget(employees, budgetGlobal, gab, idorg);
 
         return ResponseEntity.ok().build();
     }
@@ -161,18 +176,15 @@ public class EmployeeController {
 
 
     @PutMapping("/put/{id}")
-    public ResponseEntity<Void> putEmployeesAndBudget(@PathVariable("id") String idorg, @RequestBody UpdateRecRequest request) {
-        double minBudget = 100000;
-        double maxBudget = 200000;
+    public ResponseEntity<Void> putEmployeesAndBudget(@PathVariable("id") String idorg, @RequestBody UpdateRecRequest updateRecRequest) {
 
-        List<EmployeeRec> employees = request.getEmployees();
-
-        // Calculer le budget min et max ici
-        minBudget -= employeeService.calculateMinBudget(employees);
-        maxBudget -= employeeService.calculateMaxBudget(employees);
+        List<EmployeeRec> employees = updateRecRequest.getEmployees();
+        double budgetGlobal = updateRecRequest.getBudgetGlobal();
+        double gab = updateRecRequest.getGab();
 
         // Enregistrer les employés et les valeurs de budget dans la base de données
-        employeeService.updateEmployeeRecByIdorg(idorg, employees, minBudget, maxBudget);
+        employeeService.updateEmployeeRecByIdorg(idorg, employees, budgetGlobal, gab);
+
 
         return ResponseEntity.ok().build();
     }
@@ -240,15 +252,34 @@ public Double cal(@PathVariable("id")String id ){
 
         return employeeService.calculateBudgetPourcentageRestant(budgetGloabl,budgetRestant);
     }
-@PutMapping("/status/{id}")
-public void setStatus(@PathVariable("id")String id){
-        employeeService.setStatus(id);
-}
+    @PutMapping("/status/{id}")
+    public void setStatus(@PathVariable("id")String id){
+        notificationService.updateStatusApp(id);
+    }
     @PutMapping("/statusR/{id}")
     public void setStatusR(@PathVariable("id")String id){
-        employeeService.setStatusRefuser(id);
+        notificationService.updateStatusRef(id);
     }
 
+    @PutMapping("/{id}/mark-as-read")
+    public ResponseEntity<Void> markNotificationAsRead(@PathVariable("id") Long notificationId) {
+        notificationService.markNotificationAsRead(notificationId);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/manager/{managerId}")
+    public List<Notification> getNotificationsByManagerId(@PathVariable("managerId") String managerId) {
+        return notificationService.getNotificationsByManagerId(managerId);
+    }
+    @GetMapping("/nbNotif/{id}")
+    public int nbNotif(@PathVariable("id") String idManager){
+        return notificationService.nbNotif(idManager);
+    }
+    @GetMapping("/demandeAff/{id}")
+    public List<EmployeeRec> findDemandeRec(@PathVariable("id") String id){
+        return employeeService.findDemandeRec(id);
+    }
 @GetMapping("/login")
 public HRResultExtractData login() throws ConfigurationException, HRException {
         return loginService.login();
