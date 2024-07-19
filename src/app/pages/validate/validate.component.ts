@@ -22,6 +22,7 @@ export class ValidateComponent implements OnInit,AfterViewInit {
   organizationName: string = '';
   budgetSpent: any;
   budgetRemaining: any;
+  budgetGlobal1:number;
   id: number;
   filteredEmployees: EmployeeRec[] = [];
   searchTerm: string = '';
@@ -55,7 +56,8 @@ export class ValidateComponent implements OnInit,AfterViewInit {
 
     this.getEmployees();
     this.budgetService.getManagersByStatus().subscribe(data => {
-      this.managers = data;
+      this.managers = data
+
     });
   }
   
@@ -65,6 +67,9 @@ export class ValidateComponent implements OnInit,AfterViewInit {
       this.employee = employees;
       this.minBudget = Math.min(...employees.map(emp => emp.minbudget));
       this.maxBudget = Math.max(...employees.map(emp => emp.maxbudget));
+      this.organizationName = this.employee[0].idorg;
+      this.budgetGlobal1=this.employee[0].budgetGlobal;
+      this.gab1=this.employee[0].gab;
       console.log(employees);
     });
   }

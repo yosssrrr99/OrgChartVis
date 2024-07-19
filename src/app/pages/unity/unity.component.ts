@@ -1,5 +1,6 @@
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { HttpParams } from '@angular/common/http';
 import { Component, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -35,7 +36,7 @@ export class UnityComponent {
   isBlinking: boolean = false;
   isClicked: boolean = false;
 
-  constructor(private employeeService: EmployeeService,private budgetService:BudgetService,public dialog: MatDialog,public snackBar: MatSnackBar,private router:Router){}
+  constructor(private budgetService:BudgetService,public dialog: MatDialog,public snackBar: MatSnackBar,private router:Router){}
  
   ngOnInit(): void {
     this.startBlinking();
@@ -51,20 +52,17 @@ export class UnityComponent {
   }
 
   updateGab1() {
-    this.gab1 = this._budgetGlobal1-this.result.maxBudget;
+    const employees = this.dynamicRows.map(row => ({
+      number: row.number,
+      classification: row.class
+    }));
+    
+    this.result = this.budgetService.calculateBudget(employees, this.budgetGlobal1);
+    this.minBudget = this.result.minBudget;
+    this.maxBudget = this.result.maxBudget;
+    this.gab1 = this.result.gab; 
   }
-  getEmployeesByOrganisation(): void {
-    this.employeeService.getEmployeesByDepartment(this.departmentId).subscribe((response: EmployeeAndTotalSalaryResponse) => {
-      this.data = response.employees.filter(employee => employee.idorg === this.departmentId);
-     
 
-            this.budgetAnnuel1 = response.totalSalary;
-          
-          //  this.gab1=this.budgetGlobal1-this.budgetAnnuel1;
-            
-        
-    });
-  }
   onKeyPress(event: KeyboardEvent, index: number): void {
     if (event.key === 'Enter') {
       // Mettre à jour le budget lorsque la touche "Entrée" est pressée
@@ -104,6 +102,17 @@ export class UnityComponent {
       this.calculateBudget();
     }
   }
+  isFormValid(): boolean {
+    if (this.budgetGlobal1 === 0|| this.budgetGlobal1===null) {
+
+      return false;
+    }
+    if (this.dynamicRows.every(row => row.number === 0)) {
+
+      return false;
+    }
+    return true;
+  }
 
   onEmployeeChange(): void {
     this.calculateBudget();
@@ -114,24 +123,20 @@ export class UnityComponent {
       classification: row.class
     }));
   
-    this.result = this.budgetService.calculateBudget(employees);
+    this.result = this.budgetService.calculateBudget(employees, this.budgetGlobal1);
     this.minBudget = this.result.minBudget;
-    this.gab1 = this._budgetGlobal1-this.result.maxBudget;
+    this.maxBudget = this.result.maxBudget;
+    this.gab1 = this.result.gab; 
   }
   
   
   
   confirm(): void {
-    // Vérifier s'il y a des sélections vides
-    const isEmptySelected = this.dynamicRows.some(row => row.number === 0);
-    
-    if (isEmptySelected) {
+    if (!this.isFormValid()) {
       // Afficher une alerte ou une notification
       this.snackBar.open('Veuillez remplir toutes les sélections de classification.', '×', { panelClass: 'warning', duration: 5000 });
       return;
     }
-  
-    // Si aucune sélection vide, ouvrir la boîte de dialogue de confirmation
     const dialogData = new ConfirmDialogModel('Confirmation', 'Êtes-vous sûr de vouloir confirmer?');
   
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -148,12 +153,17 @@ export class UnityComponent {
         }));
         
         const idorg = "P00000653";
+        const budgetGlobal = this.budgetGlobal1;
+        const gab = this.gab1;
   
-        this.budgetService.saveEmployeesAndBudget(employees, idorg).subscribe(
+        const httpParams = new HttpParams()
+          .set('budgetGlobal', budgetGlobal.toString())
+          .set('gab', gab.toString());
+  
+        this.budgetService.saveEmployeesAndBudget(employees, httpParams, idorg).subscribe(
           (response) => {
             console.log('Data saved successfully:', response);
-            this.snackBar.open('Envelope ajouté avec succés!', '×', { panelClass: 'success',  duration: 5000 });
-  
+            this.snackBar.open('Envelope ajouté avec succès!', '×', { panelClass: 'success', duration: 5000 });
             this.router.navigate(['/history']);
           },
           (error) => {
@@ -163,6 +173,7 @@ export class UnityComponent {
       }
     });
   }
+  
   
   handleClick() {
     this.isClicked = true;

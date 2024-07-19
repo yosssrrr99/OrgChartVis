@@ -1,29 +1,38 @@
-<div  fxLayoutAlign="center center"><h1 class="secondary-font p-2 text-center">Simulation Budgétaire de recrutement</h1></div>
-<div class="px-3"> 
+<div fxLayoutAlign="center center">
+  <h1 class="secondary-font p-2 text-center">Modification de l'Enveloppe</h1>
+</div>
+<div class="px-3">
   <div class="theme-container">
-    <mat-card class="main-content-header mb-5"> 
-      <div class="p-3"> 
+    <mat-card class="main-content-header mb-5">
+      <div class="p-3">
         <div fxLayout="row wrap" fxLayoutAlign="space-around">
           <div fxFlex="100" fxFlex.gt-xs="33.3">
             <div fxLayout="column" fxLayoutAlign="center center" class="text-center">
-              <mat-icon color="primary" class="mat-icon-lg">business </mat-icon>
-              <h3 class="primary-color py-1">Budget Annuel : </h3>
-              <span>1900</span>
-            </div>
-          </div>
-          <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
-            <div fxLayout="column" fxLayoutAlign="center center">
-              <mat-icon color="primary" class="mat-icon-lg">people</mat-icon>
-              <h3 class="primary-color py-1">Budget Global :</h3>
-              <span>30000</span>
+              <mat-icon color="primary" class="mat-icon-lg">business</mat-icon>
+              <h3 class="primary-color py-1">NOM DU DEPARTEMENT :</h3>
+              <span>{{ organizationName }}</span>
             </div>
           </div>
           <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
             <div fxLayout="column" fxLayoutAlign="center center">
               <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
-              <h3 class="primary-color py-1">GAP :</h3>
-              <span>1100</span>
+              <h3 class="primary-color py-1">BUDGET GLOBAL :</h3>
+              <mat-form-field>
+                <input class="info-value" matInput type="number" [(ngModel)]="budgetGlobal1" required>
+              </mat-form-field>
             </div>
+          </div>
+          <div fxFlex="100" fxFlex.gt-xs="30" class="info-box mt-2"
+          [ngClass]="{'negative': gab1 < 0}">
+       <div fxLayout="column" fxLayoutAlign="center center">
+         <mat-icon color="primary" class="mat-icon-lg" [ngClass]="{'red-icon': gab1 < 0}">monetization_on</mat-icon>
+         <h3 class="primary-color py-1" [ngClass]="{'red-text': gab1 < 0}">Budget Restant:</h3>
+         <span class="info-value" 
+    [ngClass]="{'red-text': gab1 < 0, 'blink': isBlinking && gab1 < 0}"
+    (click)="handleClick()">
+{{ gab1 }}
+</span>
+</div>
           </div>   
         </div>  
       </div>
@@ -31,7 +40,6 @@
   </div> 
 </div>
 
-  
 
 
 <div class="container" >

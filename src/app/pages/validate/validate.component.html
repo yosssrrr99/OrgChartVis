@@ -15,39 +15,39 @@
           </mat-form-field>
         </div>
         <div fxLayout="row wrap" fxLayoutAlign="space-around">
-          <div fxFlex="100" fxFlex.gt-xs="25">
+          <div fxFlex="100" fxFlex.gt-xs="33.3">
             <div fxLayout="column" fxLayoutAlign="center center" class="text-center">
-              <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
-              <h3 class="primary-color py-1">Budget Annuel : </h3>
-              <span class="info-value">1900</span>
+              <mat-icon color="primary" class="mat-icon-lg">business</mat-icon>
+              <h3 class="primary-color py-1">NOM DU DEPARTEMENT :</h3>
+              <span>{{ organizationName }}</span>
             </div>
           </div>
-          <div fxFlex="100" fxFlex.gt-xs="25" ngClass.xs="mt-2">
-            <div fxLayout="column" fxLayoutAlign="center center">
-              <mat-icon color="primary" class="mat-icon-lg">monetization_on</mat-icon>
-              <h3 class="primary-color py-1">Min Budget :</h3>
-              <span class="info-value">{{minBudget}}</span>
-            </div>
-          </div>
-          <div fxFlex="100" fxFlex.gt-xs="25" ngClass.xs="mt-2">
+          <div fxFlex="100" fxFlex.gt-xs="33.3" ngClass.xs="mt-2">
             <div fxLayout="column" fxLayoutAlign="center center">
               <mat-icon color="primary" class="mat-icon-lg">attach_money</mat-icon>
-              <h3 class="primary-color py-1">Max Budget :</h3>
-              <span class="info-value">{{maxBudget}}</span>
+              <h3 class="primary-color py-1">BUDGET GLOBAL :</h3>
+            
+                <span class="info-value">
+            {{ budgetGlobal1 }}
+           </span>
             </div>
           </div>
-          <div fxFlex="100" fxFlex.gt-xs="25" ngClass.xs="mt-2">
-            <div fxLayout="column" fxLayoutAlign="center center">
-              <mat-icon color="primary" class="mat-icon-lg">monetization_on</mat-icon>
-              <h3 class="primary-color py-1">GAB :</h3>
-              <span class="info-value">1100</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  </div>
+          <div fxFlex="100" fxFlex.gt-xs="30" class="info-box mt-2"
+          [ngClass]="{'negative': gab1 < 0}">
+       <div fxLayout="column" fxLayoutAlign="center center">
+         <mat-icon color="primary" class="mat-icon-lg" [ngClass]="{'red-icon': gab1 < 0}">monetization_on</mat-icon>
+         <h3 class="primary-color py-1" [ngClass]="{'red-text': gab1 < 0}">Budget Restant:</h3>
+         <span class="info-value" >
+{{ gab1 }}
+</span>
 </div>
+          </div>   
+        </div>  
+      </div>
+    </mat-card>  
+  </div> 
+</div>
+
 
 <div class="container" cdkDropListGroup>
   <main class="table" id="customers_table">
@@ -67,9 +67,7 @@
             <td>{{ emp.classification }}</td>
             <td>{{ emp.date }}</td>
             <td>{{ emp.typeStatus }}</td>
-            <td>
-              <p class="details">Details</p>
-            </td>
+         
           </tr>
         </tbody>
       </table>

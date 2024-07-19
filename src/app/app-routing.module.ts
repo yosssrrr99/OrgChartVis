@@ -23,9 +23,11 @@ const routes: Routes = [
     //    { path: 'register', loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule) ,canActivate:[AuthGuard],data: { expectedRoles: ['YMGRALL','ALLHRLO'] } },
         { path: 'org', loadChildren: () => import('./pages/operational-unit/operational-unit.module').then(m => m.OperationalUnitModule),  canActivate: [AuthGuard],data: { expectedRoles: ['YMGRALL','ALLHRLO'] } },
         { path: 'history', loadChildren: () => import('./pages/historique/historique.module').then(m => m.HistoriqueModule),canActivate:[AuthGuard],data: { expectedRoles: ['YMGRALL'] }  },
+        { path: 'demande', loadChildren: () => import('./pages/demande-rec/demande-rec.module').then(m => m.DemandeRecModule),canActivate:[AuthGuard],data: { expectedRoles: ['YMGRALL'] }  },
         { path: 'validate', loadChildren: () => import('./pages/validate/validate.module').then(m => m.ValidateModule),canActivate:[AuthGuard] ,data: { expectedRoles: ['ALLHRLO'] } },
         { path: 'update', loadChildren: () => import('./pages/update/update.module').then(m => m.UpdateModule),canActivate:[AuthGuard],data: { expectedRoles: ['YMGRALL'] }  },
         { path: 'affectation', loadChildren: () => import('./pages/simulation/simulation.module').then(m => m.SimulationAffectationModule),canActivate:[AuthGuard] ,  data: { expectedRoles: ['ALLHRLO'] }},
+        { path: 'remuneration', loadChildren: () => import('./pages/remuneration/remuneration.module').then(m => m.RemunerationModule),canActivate:[AuthGuard],data: { expectedRoles: ['ALLHRLO'] }},
     
 
     ]

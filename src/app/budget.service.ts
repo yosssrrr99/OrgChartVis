@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
@@ -11,6 +11,7 @@ interface EmployeeDto {
 interface BudgetResponse {
   minBudget: number;
   maxBudget: number;
+  gab:number;
 }
 @Injectable({
   providedIn: 'root'
@@ -25,33 +26,40 @@ export class BudgetService {
     aspa: { min: 1500, max: 3000 }
   };
 
+  
   constructor(private http: HttpClient) { }
 
-  calculateBudget(employees: EmployeeDto[]): BudgetResponse {
+  calculateBudget(employees: EmployeeDto[], budgetGlobal: number): BudgetResponse {
     let minBudget = 100000;
     let maxBudget = 200000;
+    let gab: number = budgetGlobal;
 
     for (const employee of employees) {
       const range = this.salaryRanges[employee.classification];
       if (range) {
         minBudget -= employee.number * range.min;
         maxBudget -= employee.number * range.max;
+        gab -= employee.number * range.max; // Calcul du gab
       }
     }
 
-    return { minBudget, maxBudget };
-  }
+    return { minBudget, maxBudget, gab };
+}
 
-  saveEmployeesAndBudget(employeeData: any, idorg: string): Observable<any> {
-    
-    return this.http.post<any>(`${this.apiUrl}/save/${idorg}`, employeeData);
-  }
-  updateEmployeesAndBudget(employees: any, idorg: string, minBudget: number, maxBudget: number): Observable<any> {
-    const url = `${this.apiUrl}/put/${idorg}`;
-    return this.http.put(url, { employees, minBudget, maxBudget });
+saveEmployeesAndBudget(employees: any, params: HttpParams, idorg: string): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/save/${idorg}`, employees, { params });
+}
+ 
+  updateEmployeesAndBudget(updateRecRequest: any, idorg: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/put/${idorg}`, updateRecRequest);
   }
   getEmployeesByDepartment(id: string): Observable<any> {
     const url = `${this.apiUrl}/department/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  getEmployeesByDepartmentAndDate(id: string): Observable<any> {
+    const url = `${this.apiUrl}/demandeAff/${id}`;
     return this.http.get<any>(url);
   }
 
@@ -71,5 +79,14 @@ export interface EmployeeRec {
   classification:any,
   minbudget:any;
   maxbudget:any;
+  idorg:any;
+  budgetGlobal:any;
+  gab:any;
   
 }
+
+  export interface UpdateRecRequest {
+    employees: EmployeeRec[];
+    budgetGlobal: number;
+    gab: number;
+  }

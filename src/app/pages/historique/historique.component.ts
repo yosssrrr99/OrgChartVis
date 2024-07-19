@@ -15,35 +15,37 @@ export class HistoriqueComponent {
   maxBudget:any;
   updateBudget:any=5000;
   data: Employee[] = [];
-  departmentId: string = '123456';
+  departmentId: string = 'TALAN1PR';
   organizationName: string = '';
+  budgetGlobal1:number;
+  gab1:number;
     constructor(private budgetService:BudgetService,private employeeService:EmployeeService,public router:Router){}
   
     ngOnInit(): void {
    
-      
+      this.getEmployeesByIdOrg();
     }
   
     getEmployeesByIdOrg(): void {
-      this.budgetService.getEmployeesByDepartment(this.departmentId)
-        .subscribe((employees: EmployeeRec[]) => {
-       this.employee=employees;
-        console.log(employees);
-  
-           });
+      this.budgetService.getEmployeesByDepartment(this.departmentId).subscribe((employees: any[]) => {
+
+        this.employee=employees;
+        // Assuming you expect a single object with budgetGlobal and gab properties
+        const firstEmployee = employees[0]; // Assuming you expect a single object
+    
+       
+    
+        // Assign budgetGlobal1 and gab1 from the first employee
+        if (firstEmployee) {
+          this.budgetGlobal1 = firstEmployee.budgetGlobal;
+          this.organizationName=firstEmployee.idorg;
+       this.gab1=firstEmployee.gab;
+        }
+    
+     
+      });
     }
-    getEmployees(): void {
-      this.employeeService.getEmployeesByDepartment(this.departmentId)
-        .subscribe((employees: Employee[]) => {
-          this.data = employees;
-         
-  
-          if(this.data[0].nomorg){
-            this.organizationName=this.data[0].nomorg;
-          }
-          
-        });
-    }
+    
       
     public updateEnvelope() {
       // Utilisation du Router pour naviguer vers le composant de mise à jour de l'enveloppe avec l'ID en paramètre

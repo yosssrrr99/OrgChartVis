@@ -25,4 +25,24 @@ private baseUrl='http://localhost:9090/employee'
   setStatusRefuser(id: string): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/statusR/${id}`, null);
   }
+
+  
+  getNotifications(managerId: string): Observable<Notification[]> {
+    return this.http.get<Notification[]>(`${this.baseUrl}/manager/${managerId}`);
+  }
+  markNotificationAsRead(notificationId: number): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${notificationId}/mark-as-read`, {});
+  }
+  getUnreadNotificationCount(idManager: string): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/nbNotif/${idManager}`);
+  }
+  
+}
+
+export interface Notification {
+  id: number;
+  message: string;
+  idManger: string;
+  date: string;
+  isRead: boolean;
 }
